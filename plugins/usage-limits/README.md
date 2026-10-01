@@ -32,23 +32,17 @@ This copies the statusline script to `~/.claude/` and sets `statusLine` in `~/.c
 
 ## On-demand check
 
-Ask Claude `/usage-limits:usage`, or run directly:
-
-```bash
-node plugins/usage-limits/scripts/check-usage.js
-```
+Ask Claude `/usage-limits:usage`, or run Claude Code's built-in `/usage`.
 
 ## How it works
 
-1. **Primary (default, always on):** `rate_limits.five_hour` / `rate_limits.seven_day` from the statusline stdin JSON (official data, same source as `/usage`). No network, no token. Appears after the first API response in a session, Pro/Max plans only.
-2. **Fallback (unofficial, opt-in only):** only when stdin has no `rate_limits` AND `CLAUDE_USAGE_FALLBACK=1` is set, calls the undocumented `GET https://api.anthropic.com/api/oauth/usage` with the OAuth token from `~/.claude/.credentials.json` (or macOS keychain), cached 5 min in the tmpdir with retry-after backoff (min 60s) after 429s/errors. The token is only sent to `api.anthropic.com`, never stored or transmitted elsewhere. Without the opt-in, missing data degrades to `limits n/a yet` — the statusline never hangs (3s fetch timeout).
+Reads `rate_limits.five_hour` / `rate_limits.seven_day` from the statusline stdin JSON (official data, same source as `/usage`). No network, no token, no API calls. Appears after the first API response in a session, Pro/Max plans only — otherwise the line shows `limits n/a yet`. The statusline never hangs.
 
 ## Files
 
 - `settings.json` — wires the statusline (plugin-provided).
 - `scripts/usage-statusline.js` — statusline, Node stdlib only (default).
 - `scripts/usage-statusline.py` — same behavior, Python stdlib only (used by `install.sh` when node is missing).
-- `scripts/check-usage.js` — detailed on-demand view.
 - `scripts/install.sh` — manual install without the plugin system.
 - `skills/usage/SKILL.md` — `/usage-limits:usage` skill.
 

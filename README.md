@@ -21,6 +21,5 @@ Then restart Claude Code. See [`plugins/usage-limits/README.md`](plugins/usage-l
 
 ## Notes
 
-- Default data source is Claude Code's native `rate_limits` statusline payload (official, no network, no token). Values appear after the first API response in a session, Pro/Max plans only.
-- An opt-in fallback (`CLAUDE_USAGE_FALLBACK=1`) queries the undocumented OAuth usage endpoint — unofficial, use at your own discretion. See the plugin README.
+- Data source is Claude Code's native `rate_limits` statusline payload (official, no network, no token, no API calls of its own). Values appear after the first API response in a session, Pro/Max plans only.
 - If numbers differ briefly from `/usage`, trust `/usage`.

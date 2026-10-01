@@ -1,0 +1,1 @@
+{"description": "Claude Code plugins for live usage-limit visibility (5-hour + weekly).", "name": "claude-usage", "owner": {"name": "paulartjomow"}, "plugins": [{"description": "Show 5-hour and weekly (7-day) limits directly in Claude Code statusline. See what's left at a glance.", "name": "usage-limits", "source": "./plugins/usage-limits"}]}

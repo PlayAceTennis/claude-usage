@@ -1,6 +1,6 @@
 # usage-limits
 
-Shows Claude 5-hour + weekly (7-day) limits directly in the Claude Code statusline, so you can see what's left at a glance.
+Shows Claude 5-hour + weekly (7-day) limits and estimated session API cost directly in the Claude Code statusline.
 
 ## Install
 
@@ -22,13 +22,14 @@ This copies the statusline script to `~/.claude/` and sets `statusLine` in `~/.c
 ## What you see
 
 ```
-[Opus] | 5h ▓░░░░ 77% left (3h12m) | 7d ▓▓░░░ 65% left (2d4h) | ctx 34%
+[Opus] | 5h ▓░░░░ 77% left (3h12m) | 7d ▓▓░░░ 65% left (2d4h) | ctx 34% | API ~$1.23
 ```
 
 - `5h`: rolling 5-hour session window.
 - `7d`: rolling 7-day weekly cap, shared across Claude Code + Claude.ai + Cowork.
 - Colors: green <70% used, yellow 70–90%, red ≥90%.
 - `ctx`: context-window fill, unrelated to plan limits.
+- `API`: estimated API-equivalent cost of all calls in the current session, in USD. On a subscription, this estimates what the session would cost through the API; it is not an extra charge. Displays `$0.00` when reported as zero and is hidden when unavailable.
 
 ## On-demand check
 
@@ -37,6 +38,8 @@ Ask Claude `/usage-limits:usage`, or run Claude Code's built-in `/usage`.
 ## How it works
 
 Reads `rate_limits.five_hour` / `rate_limits.seven_day` from the statusline stdin JSON (official data, same source as `/usage`). No network, no token, no API calls. Appears after the first API response in a session, Pro/Max plans only — otherwise the line shows `limits n/a yet`. The statusline never hangs.
+
+The API cost comes from Claude Code's native `cost.total_cost_usd`, which accumulates its estimated cost across the current session. No hardcoded pricing table or separate token calculation is needed. Cost can appear even when plan limits are unavailable. See the [Claude Code statusline documentation](https://code.claude.com/docs/en/statusline#cost-and-duration-tracking).
 
 ## Files
 

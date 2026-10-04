@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * usage-statusline.js — Claude Code statusline showing 5h + weekly limits.
+ * usage-statusline.js — Claude Code statusline showing limits + API cost.
  *
  * Data source: stdin JSON from Claude Code (`rate_limits.five_hour` and
  * `rate_limits.seven_day`). Official payload, same data as `/usage`.
  * Zero config, zero network, zero tokens.
  *
  * Output: single line, e.g.
- *   [Opus] 5h 77% left (3h12m) | 7d 65% left (2d4h) | ctx 34%
+ *   [Opus] 5h 77% left (3h12m) | 7d 65% left (2d4h) | ctx 34% | API ~$1.23
  */
 'use strict';
 
@@ -100,11 +100,17 @@ async function main() {
     parts.push(`${DIM}ctx ${c}%${RESET}`);
   }
 
+  // Claude Code's cumulative API-equivalent estimate for this session.
+  const apiCost = d?.cost?.total_cost_usd;
+  if (typeof apiCost === 'number' && Number.isFinite(apiCost) && apiCost >= 0) {
+    parts.push(`${DIM}API ~$${apiCost.toFixed(2)}${RESET}`);
+  }
+
   if (parts.length === 0) {
     // Rate limits appear after the first API response on Pro/Max plans.
     console.log(`${DIM}limits n/a yet${RESET}`);
   } else if (!s5 && !s7) {
-    // Only model/ctx available — still useful, hint why limits are missing.
+    // Model, context, and cost are available independently of plan limits.
     console.log(parts.join(' '));
   } else {
     console.log(parts.join(' | '));

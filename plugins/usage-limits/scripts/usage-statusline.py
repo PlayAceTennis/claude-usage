@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""usage-statusline.py — Claude Code statusline showing 5h + weekly limits.
+"""usage-statusline.py — Claude Code statusline showing limits + API cost.
 
 Data source: stdin JSON from Claude Code (`rate_limits.five_hour` and
 `rate_limits.seven_day`). Official payload, same data as `/usage`.
 Zero config, zero network, zero tokens. Stdlib only.
 """
 import json
+import math
 import sys
 import time
 
@@ -92,11 +93,17 @@ def main():
     if ctx is not None:
         parts.append(f"{DIM}ctx {round(ctx)}%{RESET}")
 
+    # Claude Code's cumulative API-equivalent estimate for this session.
+    api_cost = (d.get("cost") or {}).get("total_cost_usd")
+    if (type(api_cost) in (int, float) and math.isfinite(api_cost)
+            and api_cost >= 0):
+        parts.append(f"{DIM}API ~${api_cost:.2f}{RESET}")
+
     if not parts:
         # Rate limits appear after the first API response on Pro/Max plans.
         print(f"{DIM}limits n/a yet{RESET}")
     elif not s5 and not s7:
-        # Only model/ctx available — still useful, hint why limits are missing.
+        # Model, context, and cost are available independently of plan limits.
         print(" ".join(parts))
     else:
         print(" | ".join(parts))

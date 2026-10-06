@@ -17,7 +17,7 @@ Claude Code marketplace: live 5-hour + weekly usage limits and estimated session
 /plugin install usage-limits@claude-usage
 ```
 
-Then restart Claude Code. See [`plugins/usage-limits/README.md`](plugins/usage-limits/README.md) for details.
+Then run `/usage-limits:usage install the statusline` in Claude Code (requires Node.js on PATH). Installing the plugin alone does not configure the statusline. Restart Claude Code if needed. See [`plugins/usage-limits/README.md`](plugins/usage-limits/README.md) for details.
 
 ## Notes
 

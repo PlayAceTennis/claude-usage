@@ -1,5 +1,6 @@
 """Run with: python3 -m unittest discover -s plugins/usage-limits/scripts."""
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -16,12 +17,24 @@ class StatuslineCostTests(unittest.TestCase):
         outputs = []
         for command in (["node", str(SCRIPTS / "usage-statusline.js")],
                         [sys.executable, str(SCRIPTS / "usage-statusline.py")]):
-            result = subprocess.run(command, input=json.dumps(payload), text=True,
+            result = subprocess.run(command, input=json.dumps(payload), encoding="utf-8",
                                     capture_output=True, check=True, timeout=3)
             self.assertEqual(result.stderr, "")
             outputs.append(ANSI.sub("", result.stdout).strip())
         self.assertEqual(outputs[0], outputs[1])
         return outputs[0]
+
+    def test_python_with_legacy_windows_encoding(self):
+        result = subprocess.run(
+            [sys.executable, str(SCRIPTS / "usage-statusline.py")],
+            input=json.dumps({"model": {"display_name": "Modèle"},
+                              "rate_limits": {"five_hour": {"used_percentage": 20}}},
+                             ensure_ascii=False),
+            encoding="utf-8", capture_output=True, check=True, timeout=3,
+            env={**os.environ, "PYTHONIOENCODING": "cp1252", "PYTHONUTF8": "0"})
+        self.assertEqual(result.stderr, "")
+        self.assertIn("Modèle", result.stdout)
+        self.assertIn("▓░░░░", result.stdout)
 
     def test_cost_alongside_existing_segments(self):
         output = self.render({

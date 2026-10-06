@@ -53,6 +53,9 @@ def bar(used, width=5):
 
 
 def main():
+    # Piped streams on Windows otherwise use a code page without these bars.
+    sys.stdin.reconfigure(encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")
     try:
         raw = sys.stdin.read() if not sys.stdin.isatty() else ""
         d = json.loads(raw) if raw.strip() else {}

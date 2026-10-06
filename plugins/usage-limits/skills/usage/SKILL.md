@@ -15,13 +15,15 @@ Point the user at Claude Code's built-in `/usage` command — it shows the autho
 
 ## 2. Permanent statusline (user wants it "directly in Claude Code")
 
-Run the installer:
+Run the Node installer (Node.js must be on PATH). Installing the plugin alone does not register a statusline:
 
 ```bash
-bash "${CLAUDE_PLUGIN_ROOT}/scripts/install.sh"
+node "${CLAUDE_PLUGIN_ROOT}/scripts/install.js"
 ```
 
-This copies the statusline script to `~/.claude/` and sets `statusLine` in `~/.claude/settings.json` (existing settings preserved, backup created). Tell the user:
+Resolve `${CLAUDE_PLUGIN_ROOT}` to the actual plugin directory before invoking this command in PowerShell; it is not PowerShell environment-variable syntax. Use a quoted path with forward slashes.
+
+This copies the statusline script to `~/.claude/` and sets `statusLine` in `~/.claude/settings.json` (unrelated settings preserved, existing files backed up). It respects `CLAUDE_CONFIG_DIR`, replaces any existing statusline command, and refuses malformed settings. Re-run after plugin updates to refresh the copied script. Tell the user:
 
 - The line shows e.g. `[Opus] 5h ▓▓▓░░ 77% left (3h12m) | 7d 65% left (2d4h) | ctx 34%` — green/yellow/red by consumption.
 - Values come from Claude Code's native `rate_limits` payload (no token needed, no API calls, no network). They appear after the first API response in a session and only on Pro/Max plans; otherwise the line shows `limits n/a yet`.

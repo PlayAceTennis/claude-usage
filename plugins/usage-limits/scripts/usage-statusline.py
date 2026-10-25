@@ -63,6 +63,13 @@ def main():
         d = {}
 
     model = (d.get("model") or {}).get("display_name") or (d.get("model") or {}).get("id") or ""
+    eff = d.get("effort")
+    if isinstance(eff, str):
+        effort = eff
+    elif isinstance(eff, dict) and isinstance(eff.get("level"), str):
+        effort = eff["level"]
+    else:
+        effort = ""
     ctx = (d.get("context_window") or {}).get("used_percentage")
 
     # Native payload (Pro/Max, after first API response in the session).
@@ -78,7 +85,7 @@ def main():
     now = int(time.time())
     parts = []
     if model:
-        parts.append(f"{CYAN}[{model}]{RESET}")
+        parts.append(f"{CYAN}[{model}{' ' + effort if effort else ''}]{RESET}")
 
     def seg(label, w):
         if not w or w.get("used") is None:

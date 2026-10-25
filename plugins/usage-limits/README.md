@@ -24,9 +24,10 @@ The installer works from PowerShell, Git Bash, and macOS/Linux shells without Py
 ## What you see
 
 ```
-[Opus] | 5h ▓░░░░ 77% left (3h12m) | 7d ▓▓░░░ 65% left (2d4h) | ctx 34% | API ~$1.23
+[Opus high] | 5h ▓░░░░ 77% left (3h12m) | 7d ▓▓░░░ 65% left (2d4h) | ctx 34% | API ~$1.23
 ```
 
+- `[Opus high]`: current model and its effort level (`low`/`medium`/`high`/`xhigh`/`max`); the level appears only when the model supports the effort parameter.
 - `5h`: rolling 5-hour session window.
 - `7d`: rolling 7-day weekly cap, shared across Claude Code + Claude.ai + Cowork.
 - Colors: green <70% used, yellow 70–90%, red ≥90%.
@@ -41,7 +42,7 @@ Ask Claude `/usage-limits:usage`, or run Claude Code's built-in `/usage`.
 
 Reads `rate_limits.five_hour` / `rate_limits.seven_day` from the statusline stdin JSON (official data, same source as `/usage`). No network, no token, no API calls. Appears after the first API response in a session, Pro/Max plans only — otherwise the line shows `limits n/a yet`. The statusline never hangs.
 
-The API cost comes from Claude Code's native `cost.total_cost_usd`, which accumulates its estimated cost across the current session. No hardcoded pricing table or separate token calculation is needed. Cost can appear even when plan limits are unavailable. See the [Claude Code statusline documentation](https://code.claude.com/docs/en/statusline#cost-and-duration-tracking).
+The effort level comes from the native `effort.level` field, present only when the current model supports the effort parameter. The API cost comes from Claude Code's native `cost.total_cost_usd`, which accumulates its estimated cost across the current session. No hardcoded pricing table or separate token calculation is needed. Cost can appear even when plan limits are unavailable. See the [Claude Code statusline documentation](https://code.claude.com/docs/en/statusline#cost-and-duration-tracking).
 
 ## Files
 

@@ -71,6 +71,37 @@ class StatuslineCostTests(unittest.TestCase):
                 self.assertEqual(self.render({"cost": {"total_cost_usd": cost}}),
                                  "limits n/a yet")
 
+    def test_effort_inside_model_bracket(self):
+        output = self.render({
+            "model": {"display_name": "Opus"},
+            "effort": {"level": "high"},
+            "context_window": {"used_percentage": 34},
+            "rate_limits": {
+                "five_hour": {"used_percentage": 20},
+                "seven_day": {"used_percentage": 40},
+            },
+            "cost": {"total_cost_usd": 1.234},
+        })
+        self.assertEqual(output, "[Opus high] | 5h ▓░░░░ 80% left (?) | "
+                         "7d ▓▓░░░ 60% left (?) | ctx 34% | API ~$1.23")
+
+    def test_effort_string_form(self):
+        self.assertEqual(
+            self.render({"model": {"display_name": "Opus"}, "effort": "max"}),
+            "[Opus max]")
+
+    def test_invalid_effort_is_hidden(self):
+        for effort in (None, 3, True, {"level": None}, {"level": 3}, {}):
+            with self.subTest(effort=effort):
+                self.assertEqual(
+                    self.render({"model": {"display_name": "Opus"},
+                                 "effort": effort}),
+                    "[Opus]")
+
+    def test_effort_without_model_is_hidden(self):
+        self.assertEqual(self.render({"effort": {"level": "high"}}),
+                         "limits n/a yet")
+
 
 if __name__ == "__main__":
     unittest.main()

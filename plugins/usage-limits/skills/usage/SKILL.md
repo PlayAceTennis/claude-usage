@@ -25,6 +25,6 @@ Resolve `${CLAUDE_PLUGIN_ROOT}` to the actual plugin directory before invoking t
 
 This copies the statusline script to `~/.claude/` and sets `statusLine` in `~/.claude/settings.json` (unrelated settings preserved, existing files backed up). It respects `CLAUDE_CONFIG_DIR`, replaces any existing statusline command, and refuses malformed settings. Re-run after plugin updates to refresh the copied script. Tell the user:
 
-- The line shows e.g. `[Opus] 5h ▓▓▓░░ 77% left (3h12m) | 7d 65% left (2d4h) | ctx 34%` — green/yellow/red by consumption.
+- The line shows e.g. `[Opus high] 5h ▓▓▓░░ 77% left (3h12m) | 7d 65% left (2d4h) | ctx 34%` — green/yellow/red by consumption. The bracket shows the model and its effort level when supported.
 - Values come from Claude Code's native `rate_limits` payload (no token needed, no API calls, no network). They appear after the first API response in a session and only on Pro/Max plans; otherwise the line shows `limits n/a yet`.
 - To remove: delete the `statusLine` key from `~/.claude/settings.json` (or run `/statusline remove it`).

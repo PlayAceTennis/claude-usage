@@ -3,12 +3,12 @@
 Claude Code marketplace: live 5-hour + weekly usage limits and estimated session API cost in the statusline.
 
 ```
-[Opus] | 5h ▓░░░░ 77% left (3h12m) | 7d ▓▓░░░ 65% left (2d4h) | ctx 34% | API ~$1.23
+[Opus high] | 5h ▓░░░░ 77% left (3h12m) | 7d ▓▓░░░ 65% left (2d4h) | ctx 34% | API ~$1.23
 ```
 
 ## Plugins
 
-- `usage-limits@claude-usage` — 5h + 7-day remaining %, reset timers, color-coded, estimated session API cost; plus `/usage-limits:usage` on-demand check.
+- `usage-limits@claude-usage` — model + effort level, 5h + 7-day remaining %, reset timers, color-coded, estimated session API cost; plus `/usage-limits:usage` on-demand check.
 
 ## Use
 
@@ -24,3 +24,4 @@ Then run `/usage-limits:usage install the statusline` in Claude Code (requires N
 - Data source is Claude Code's native `rate_limits` statusline payload (official, no network, no token, no API calls of its own). Values appear after the first API response in a session, Pro/Max plans only.
 - If numbers differ briefly from `/usage`, trust `/usage`.
 - `API ~$1.23` shows Claude Code's estimated API-equivalent cost for the current session in USD, not an extra subscription charge. Hidden when cost data is unavailable.
+- `[Opus high]` shows the model name plus its effort level (`low`/`medium`/`high`/`xhigh`/`max`) when the model supports the effort parameter; the level is hidden otherwise.

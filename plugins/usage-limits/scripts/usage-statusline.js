@@ -64,6 +64,9 @@ async function main() {
   try { d = raw ? JSON.parse(raw) : {}; } catch { d = {}; }
 
   const model = d?.model?.display_name || d?.model?.id || '';
+  const eff = d?.effort;
+  const effort = typeof eff === 'string' ? eff
+    : (eff && typeof eff.level === 'string' ? eff.level : '');
   const ctxPct = d?.context_window?.used_percentage;
 
   // Native payload (Pro/Max, after first API response in the session).
@@ -80,7 +83,7 @@ async function main() {
 
   const nowSec = Math.floor(Date.now() / 1000);
   const parts = [];
-  if (model) parts.push(`${CYAN}[${model}]${RESET}`);
+  if (model) parts.push(`${CYAN}[${model}${effort ? ` ${effort}` : ''}]${RESET}`);
 
   const seg = (label, w) => {
     if (w == null || w.used == null) return null;
